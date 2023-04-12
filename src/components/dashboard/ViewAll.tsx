@@ -3,12 +3,19 @@ import React from "react";
 import { Page, SafeView } from "../Mains";
 import HeaderBack from "../../globals/HeaderBack";
 import CardItemList from "./CardItemList";
+import { SearchBar } from "react-native-elements";
+
 
 const ViewAll = () => {
   return (
     <SafeView>
       <Page>
         <HeaderBack />
+        <SearchBar
+        placeholder="search by student No"
+        containerStyle={{borderColor:'#fff',backgroundColor:'#fff',
+      }}
+        />
         <View style={styles.con}>
           <CardItemList />
         </View>

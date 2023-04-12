@@ -5,7 +5,8 @@ import HeaderBack from "../../globals/HeaderBack";
 import { Button, TextInput } from "react-native-paper";
 import { AuthTop } from "./Login";
 import { useNavigation } from "@react-navigation/native";
-
+import { Formik } from 'formik'
+import * as yup from 'yup' 
 const Register = () => {
 
   const navigation = useNavigation();
@@ -23,7 +24,7 @@ const Register = () => {
   return (
     <SafeView>
       <Page>
-        <HeaderBack />
+        {/* <HeaderBack /> */}
         <KeyboardAvoidingView style={styles.con}>
           <AuthTop title={title} sub={sub} />
           <InputWrapper />
@@ -38,7 +39,27 @@ const Register = () => {
 };
 
 const InputWrapper = () => {
+  const IDRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+  const StudNoRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+    const ReviewSchem=yup.object({
+        StudentNo:yup.string().required().min(9).matches(StudNoRegExp,'Student No  is not valid'),
+        Surname:yup.string().required().min(3),
+        IDnumber:yup.string().required().matches(IDRegExp,'IDnumber  is not valid').min(13),
+        email:yup.string().required().min(6),
+        password:yup.string().required().min(6),
+        confirmpassword:yup.string().required().min(6).oneOf([yup.ref('password'),null],'password does not match')
+    })
   return (
+    <Formik
+        initialValues={{StudentNo:'',Surname:'',IDnumber:'',email:'',password:'',confirmpassword:''}}
+        validationSchema={ReviewSchem}
+        onSubmit={(values,action)=>{
+            action.resetForm()
+            // addUser(values)
+        }}
+        >
+            {(props)=>(
+              
     <View style={styles.inputsContainer}>
       <TextInput
         placeholder="email address"
@@ -47,7 +68,11 @@ const InputWrapper = () => {
         label={"email address"}
         style={styles.input}
         keyboardType="email-address"
+        onChangeText={props.handleChange('email')}
+        value={props.values.email}
+        onBlur={props.handleBlur('email')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.email && props.errors.email}</Text>
       <TextInput
         placeholder="Student No"
         outlineStyle={styles.outline}
@@ -55,7 +80,11 @@ const InputWrapper = () => {
         label={"Student No"}
         style={styles.input}
         keyboardType="number-pad"
+        onChangeText={props.handleChange('StudentNo')}
+        value={props.values.StudentNo}
+        onBlur={props.handleBlur('StudentNo')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.StudentNo && props.errors.StudentNo}</Text>
       <TextInput
         placeholder="Surname & Initials"
         outlineStyle={styles.outline}
@@ -63,7 +92,11 @@ const InputWrapper = () => {
         label={"Surname & Initials"}
         style={styles.input}
         keyboardType="default"
+        onChangeText={props.handleChange('Surname')}
+        value={props.values.Surname}
+        onBlur={props.handleBlur('Surname')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.Surname && props.errors.Surname}</Text>
       <TextInput
         placeholder="ID Number"
         outlineStyle={styles.outline}
@@ -71,7 +104,11 @@ const InputWrapper = () => {
         label={"ID Number"}
         style={styles.input}
         keyboardType="number-pad"
+        onChangeText={props.handleChange('IDnumber')}
+        value={props.values.IDnumber}
+        onBlur={props.handleBlur('IDnumber')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.IDnumber && props.errors.IDnumber}</Text>
       <TextInput
         placeholder="password"
         outlineStyle={styles.outline}
@@ -80,7 +117,11 @@ const InputWrapper = () => {
         style={styles.input}
         keyboardType="default"
         secureTextEntry={true}
+        onChangeText={props.handleChange('password')}
+        value={props.values.password}
+        onBlur={props.handleBlur('password')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.password && props.errors.password}</Text>
       <TextInput
         placeholder="Confirm password"
         outlineStyle={styles.outline}
@@ -89,8 +130,14 @@ const InputWrapper = () => {
         style={styles.input}
         keyboardType="default"
         secureTextEntry={true}
+        onChangeText={props.handleChange('confirmpassword')}
+        value={props.values.confirmpassword}
+        onBlur={props.handleBlur('confirmpassword')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.confirmpassword && props.errors.confirmpassword}</Text>
     </View>
+     )}
+     </Formik>
   );
 };
 

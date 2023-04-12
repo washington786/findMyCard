@@ -4,7 +4,8 @@ import { Page, SafeView } from "../../components/Mains";
 import HeaderBack from "../../globals/HeaderBack";
 import { AuthTop } from "./Login";
 import { Button, TextInput } from "react-native-paper";
-
+import { Formik } from 'formik'
+import * as yup from 'yup' 
 const ResetPassword = () => {
   let title: string = "forgot your password?";
   let sub: string =
@@ -12,6 +13,7 @@ const ResetPassword = () => {
   const onHandleSubmit = () => {
     console.log("submitted");
   };
+ 
   return (
     <SafeView>
       <Page>
@@ -26,7 +28,21 @@ const ResetPassword = () => {
   );
 };
 const InputWrapper = () => {
+  const ReviewSchem=yup.object({
+    email:yup.string().required().min(6),
+    
+    
+})
   return (
+    <Formik
+                  initialValues={{email:'',}}
+                 validationSchema={ReviewSchem}
+                 onSubmit={(values,action)=>{
+                     action.resetForm()
+                    //  signIn(values)
+                 }}
+                 >
+                     {(props)=>(
     <View style={styles.inputsContainer}>
       <TextInput
         placeholder="email address"
@@ -35,8 +51,14 @@ const InputWrapper = () => {
         label={"email address"}
         style={styles.input}
         keyboardType="email-address"
+        onChangeText={props.handleChange('email')}
+        value={props.values.email}
+        onBlur={props.handleBlur('email')}
       />
+        <Text style={{color:'red',marginTop:-15}}>{props.touched.email && props.errors.email}</Text>
     </View>
+    )}
+    </Formik>
   );
 };
 

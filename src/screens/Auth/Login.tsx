@@ -9,7 +9,8 @@ import {
   Button,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-
+import { Formik } from 'formik'
+import * as yup from 'yup' 
 const Login = () => {
   const navigation = useNavigation();
   const onHandleRegister = () => {
@@ -19,7 +20,7 @@ const Login = () => {
     navigation.navigate("reset");
   };
   const onHandleLogin = () => {
-    console.log("logins");
+    navigation.navigate("main");
   };
   let title: string = "Welcome Back";
   let sub: string = "please enter your credentials to sign in to your account.";
@@ -55,7 +56,23 @@ export const AuthTop = (props: t) => {
   );
 };
 const InputWrapper = () => {
+  const ReviewSchem=yup.object({
+    email:yup.string().required().min(6),
+    password:yup.string().required().min(6),
+    
+})
+
   return (
+    <Formik
+                  initialValues={{email:'',password:''}}
+                 validationSchema={ReviewSchem}
+                 onSubmit={(values,action)=>{
+                     action.resetForm()
+                    //  signIn(values)
+                 }}
+                 >
+                     {(props)=>(
+                       
     <View style={styles.inputsContainer}>
       <TextInput
         placeholder="email address"
@@ -63,7 +80,11 @@ const InputWrapper = () => {
         mode="outlined"
         label={"email address"}
         style={styles.input}
+        onChangeText={props.handleChange('email')}
+        value={props.values.email}
+        onBlur={props.handleBlur('email')}
       />
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.email && props.errors.email}</Text>
       <TextInput
         placeholder="password"
         outlineStyle={styles.outline}
@@ -71,8 +92,15 @@ const InputWrapper = () => {
         label={"password"}
         secureTextEntry={true}
         style={styles.input}
+        onChangeText={props.handleChange('password')}
+        value={props.values.password}
+        onBlur={props.handleBlur('password')}
       />
+      
+      <Text style={{color:'red',marginTop:-15}}>{props.touched.password && props.errors.password}</Text>
     </View>
+    )}
+    </Formik>
   );
 };
 
