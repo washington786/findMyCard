@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, View,Alert } from "react-native";
 import React, { useState } from "react";
 import { Page, SafeView } from "../../components/Mains";
 import HeaderBack from "../../globals/HeaderBack";
@@ -7,6 +7,12 @@ import { AuthTop } from "./Login";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from 'formik'
 import * as yup from 'yup' 
+import { auth,db } from "./firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ref,child,set } from "firebase/database";
+
+
+// https://www.red-gate.com/simple-talk/development/working-with-firebase-version-9-modular-sdk-and-react-typescript/
 const Register = () => {
 
   const navigation = useNavigation();
@@ -39,6 +45,7 @@ const Register = () => {
 };
 
 const InputWrapper = () => {
+  const navigation = useNavigation();
   const IDRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const StudNoRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const ReviewSchem=yup.object({
@@ -49,13 +56,52 @@ const InputWrapper = () => {
         password:yup.string().required().min(6),
         confirmpassword:yup.string().required().min(6).oneOf([yup.ref('password'),null],'password does not match')
     })
+    const addUser= async (data)=>{
+      try{
+        const {uid,email,password,Surname,StudentNo,IDnumber} =data
+await createUserWithEmailAndPassword(auth,
+    email.trim().toLowerCase(),password).then(res =>{
+     
+        
+       const StudentsRef= ref(db,`/Studens`)
+         const StudentChild=child(StudentsRef, res.user.uid)
+         set(StudentChild,{
+          StudentNo:StudentNo,
+          Surname:Surname,
+          email:email.trim().toLowerCase(),
+          IDnumber:IDnumber,
+          uid:res.user.uid
+        })
+        
+        // navigation.navigate('main')
+        })
+      }
+      catch(error){
+        if(error.code === 'auth/email-already-in-use'){
+          Alert.alert(
+            'That email address is already inuse'
+          )
+        }
+        if(error.code === 'auth/invalid-email'){
+          Alert.alert(
+            'That email address is invalid'
+          )
+        }
+        else{
+          console.warn(error.code)
+          // Alert.alert(error.code)
+        }
+        
+      }
+      
+    }
   return (
     <Formik
         initialValues={{StudentNo:'',Surname:'',IDnumber:'',email:'',password:'',confirmpassword:''}}
         validationSchema={ReviewSchem}
         onSubmit={(values,action)=>{
             action.resetForm()
-            // addUser(values)
+            addUser(values)
         }}
         >
             {(props)=>(
@@ -86,7 +132,7 @@ const InputWrapper = () => {
       />
       <Text style={{color:'red',marginTop:-15}}>{props.touched.StudentNo && props.errors.StudentNo}</Text>
       <TextInput
-        placeholder="Surname & Initials"
+        placeholder="Surname  Initials"
         outlineStyle={styles.outline}
         mode="outlined"
         label={"Surname & Initials"}
@@ -135,7 +181,16 @@ const InputWrapper = () => {
         onBlur={props.handleBlur('confirmpassword')}
       />
       <Text style={{color:'red',marginTop:-15}}>{props.touched.confirmpassword && props.errors.confirmpassword}</Text>
+      <Button
+        mode="contained-tonal"
+        style={styles.button}
+        labelStyle={styles.label}
+        onPress={props.handleSubmit}
+      >
+        create account
+      </Button>
     </View>
+  
      )}
      </Formik>
   );
@@ -148,14 +203,14 @@ interface b {
 const ButtonsWrapper = (props: b) => {
   return (
     <>
-      <Button
+      {/* <Button
         mode="contained-tonal"
         style={styles.button}
         labelStyle={styles.label}
         onPress={props.onHandleRegister}
       >
         create account
-      </Button>
+      </Button> */}
       <Button
         mode="outlined"
         style={[
