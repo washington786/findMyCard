@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { Page, SafeView } from "../../../components/Mains";
 import { CustomHeader } from "../../../components/CustomHeader";
 import Scroller from "../../../components/Scroller";
@@ -14,7 +14,8 @@ import Icons from "react-native-vector-icons/Feather";
 import { Button, Divider, Text, Title } from "react-native-paper";
 import { Divider as AndroidDivider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-
+import { db,auth } from "../../Auth/firebase";
+import { ref,onValue } from "firebase/database";
 const isAndroid = Platform.OS === "android";
 
 // screens
@@ -28,10 +29,26 @@ const screens = {
 };
 
 const SettingScreen = () => {
+  const user = auth.currentUser?.uid;
   const navigation = useNavigation();
+  const [Surname,setSurname]=useState('')
+  const [Uid,setUid]=useState('')
+  const [StudentNo,setStudentNo]=useState('')
+  useEffect(() => {
+   const StudentRef= ref(db,'/Studens/' + user)
+   onValue(StudentRef, snap => {
 
+        setSurname(snap.val() && snap.val().surname);
+        setStudentNo(snap.val().StudentNo)
+        // setEmail(snap.val().email)
+        setUid(snap.val().uid)
+    }) 
+
+}, [])
   const transitMyAccount = (): any => {
-    navigation.navigate(`${screens.setting}`);
+    navigation.navigate(`${screens.setting}`,{
+      StudentNo:StudentNo,Surname:Surname,Uid:Uid
+    });
   };
   const transitPassword = (): any => {
     navigation.navigate(`${screens.password}`);

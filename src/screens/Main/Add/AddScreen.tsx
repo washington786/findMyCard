@@ -64,7 +64,7 @@ const ScannerComponent = () => {
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && (
-        <BottomSheets/>
+        <BottomSheets data={data}/>
       )}
     </View>
   );

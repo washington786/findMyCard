@@ -13,7 +13,7 @@ import Icons from "react-native-vector-icons/Feather";
 
 const Details = () => {
   const route = useRoute();
-  const { item } = route.params;
+  const { item } = route.params; 
 
   const { admin, message, student_info, student_no } = item;
 
