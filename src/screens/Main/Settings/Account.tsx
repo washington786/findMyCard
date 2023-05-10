@@ -6,12 +6,12 @@ import Scroller from "../../../components/Scroller";
 import { Avatar, Button, TextInput } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 const Account = () => {
-  const [Surname, setSurname] = useState('');
+  // const [Surname, setSurname] = useState('');
   const [lName, setLName] = useState("");
   const [phone, setPhoneNo] = useState("");
  
   const onSetFName = (e: any) => {
-    setSurname(e);
+    // setSurname(e);
   };
   const onSetLName = (e: any) => {
     setLName(e);
@@ -33,7 +33,7 @@ const Account = () => {
               style={styles.av}
             />
             <InputWrappers
-              firstName={Surname}
+              // firstName={Surname}
               lastName={lName}
               phoneNumber={phone}
               onSetFirstName={onSetFName}
@@ -62,18 +62,18 @@ interface input {
 }
 const InputWrappers = (props: input) => {
   const route = useRoute()
-  const { item } = route.params; 
+  // const { item } = route.params; 
 
-  const { Surname,StudentNo} = item;
-  const [Sname, setSurname] = useState(Surname);
-  const [StudentNumber,setStudentNumber]=useState(StudentNo)
+  // const { Surname,StudentNo} = item;
+  const [Sname, setSurname] = useState(route.params.Surname);
+  const [StudentNumber,setStudentNumber]=useState(route.params.StudentNo)
   return (
     <View style={styles.inputCon}>
       <TextInput
         placeholder="First Name"
         value={props.firstName}
         mode="outlined"
-        label={Surname}
+        label={Sname}
         style={styles.input}
         onChangeText={props.onSetFirstName}
       />
@@ -88,7 +88,7 @@ const InputWrappers = (props: input) => {
       <TextInput
         placeholder="Student Number"
         mode="outlined"
-        label={StudentNo}
+        label={StudentNumber}
         style={styles.input}
         disabled
       />

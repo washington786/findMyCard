@@ -38,7 +38,7 @@ const SettingScreen = () => {
    const StudentRef= ref(db,'/Studens/' + user)
    onValue(StudentRef, snap => {
 
-        setSurname(snap.val() && snap.val().surname);
+        setSurname(snap.val() && snap.val().Surname);
         setStudentNo(snap.val().StudentNo)
         // setEmail(snap.val().email)
         setUid(snap.val().uid)

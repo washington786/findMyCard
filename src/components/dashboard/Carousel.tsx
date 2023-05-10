@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { StyleSheet, View } from "react-native";
 import { Image } from "react-native-elements";
 
@@ -7,6 +7,7 @@ import { ActivityIndicator, Paragraph, Text } from "react-native-paper";
 import { Info } from "../../data/info";
 
 const MyPager = () => {
+  
   return (
     <View
       style={{

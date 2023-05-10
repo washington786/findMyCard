@@ -16,7 +16,7 @@ const Details = () => {
   const { item } = route.params; 
 
   const { admin, message, student_info, student_no } = item;
-
+ 
   let date_posted: Date = new Date("2023-03-28 09:10");
 
   const [isAdd, setAdd] = useState(false);

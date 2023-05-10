@@ -21,10 +21,11 @@ const Item = (props: i) => {
         <Text>Student Number: {props.studentNo}</Text>
         <View>
           <Text>Found By</Text>
+          <Text numberOfLines={1}>{props.place}</Text>
           <Divider orientation="horizontal" />
           <View style={styles.loc}>
             <Icons name="location-pin" size={20} color="#333" />
-            <Text numberOfLines={1}>{props.place}</Text>
+            
           </View>
         </View>
       </View>

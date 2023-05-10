@@ -60,7 +60,7 @@ export const ContentCardItem = (props: item) => {
       style={[styles.card, { marginBottom: 10 }]}
       onPress={props.onPress}
       key={props.id}
-    >
+    > 
       <Card.Content>
         <View style={{ maxHeight: 100, minHeight: 100 }}>
           <Caption style={{ position: "absolute", right: 2, top: -10 }}>

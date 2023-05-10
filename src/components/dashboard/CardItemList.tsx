@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React ,{useEffect,useState}from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { ContentCardItem } from "./Content";
 import { useNavigation } from "@react-navigation/native";
-
+import { db } from "../../screens/Auth/firebase";
+import { ref,onValue } from "firebase/database";
 const data = [
   {
     id: 1,
@@ -32,7 +33,29 @@ const data = [
 ];
 
 export const CardItemList = () => {
+  const [Student, setStudent] = useState([])
+  useEffect(() => {
 
+  const studentRef= ref(db,'/LostCard')
+  onValue(studentRef, snap => {
+
+        const Student = []
+        snap.forEach(action => {
+            const key = action.key
+            const data = action.val()
+            Student.push({
+                key: key,
+                Email:data.Email,
+                Surname:data.Surname, LostStudCard:data.LostStudentCard,
+                Comment:data.comment
+            })
+            setStudent(Student)
+            
+            
+
+        })
+    })
+}, [])
   const navigation = useNavigation();
 
   const transitToDetails=(item:any|object):void=>{
@@ -40,14 +63,14 @@ export const CardItemList = () => {
   }
 
   const _renderItem = ({item}) => {
-    const { id, student_info, student_no, message, admin } = item;
+    const { id, student_info, LostStudCard, message, admin } = item;
     return (
       <ContentCardItem
-        admin={admin}
+        admin={item.Surname}
         date_posted={""}
-        message={message}
+        message={item.Comment}
         student_name={student_info}
-        student_no={student_no}
+        student_no={item.LostStudCard}
         id={id}
         onPress={transitToDetails.bind(this,item)}
       />
@@ -57,10 +80,10 @@ export const CardItemList = () => {
     <>
       <FlatList
         renderItem={_renderItem}
-        data={data}
-        keyExtractor={(item) => {
-          return item.id.toString();
-        }}
+        data={Student}
+        // keyExtractor={(item) => {
+        //   return item.id.toString();
+        // }}
         contentContainerStyle={{ flexGrow: 1 }}
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
