@@ -60,7 +60,7 @@ const onHandleAdd=()=>{
       >
         <ScrollView>
             <Button mode="outlined" labelStyle={{color:'blue'}}>Scan Again 📷 </Button>
-          <Text>{data} {Surname}</Text>
+          <Text>{data} </Text>
           <Text>Enter your contact details</Text>
           <View style={styles.inputCon}>
             <TextInput
