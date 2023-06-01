@@ -6,12 +6,12 @@ import Scroller from "../../../components/Scroller";
 import { Avatar, Button, TextInput } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 const Account = () => {
-  // const [Surname, setSurname] = useState('');
+  const [surname, setSurname] = useState('');
   const [lName, setLName] = useState("");
   const [phone, setPhoneNo] = useState("");
  
   const onSetFName = (e: any) => {
-    // setSurname(e);
+    setSurname(e);
   };
   const onSetLName = (e: any) => {
     setLName(e);

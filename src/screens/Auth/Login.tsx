@@ -1,5 +1,11 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View ,Alert} from "react-native";
-import React from "react";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+} from "react-native";
+import React, { useState } from "react";
 import { Page, SafeView } from "../../components/Mains";
 import HeaderBack from "../../globals/HeaderBack";
 import {
@@ -9,11 +15,11 @@ import {
   Button,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { Formik } from 'formik'
-import * as yup from 'yup' 
+import { Formik } from "formik";
+import * as yup from "yup";
 import { auth } from "./firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Login = () => {
   const navigation = useNavigation();
   const onHandleRegister = () => {
@@ -59,87 +65,90 @@ export const AuthTop = (props: t) => {
   );
 };
 const InputWrapper = () => {
-  const ReviewSchem=yup.object({
-    email:yup.string().required().min(6),
-    password:yup.string().required().min(6),
-    
-})
-const navigation = useNavigation();
-const Submit = async (data) => {
- 
-  try {
-      const { email, password } = data
-    await 
-          signInWithEmailAndPassword(
-              auth,email.trim().toLowerCase(), password)
-              .then(async res => {
+  const [loading, setLoading] = useState(false);
 
-              try {
+  const ReviewSchem = yup.object({
+    email: yup.string().required().min(6),
+    password: yup.string().required().min(6),
+  });
 
-                  const jsonValue = JSON.stringify(res.user)
-                  await AsyncStorage.setItem("Studens", res.user.uid)
-                  navigation.navigate("main");
-              } catch (e) {
-                  // saving error
-                  console.log('no data')
-              }
-          })
+  const navigation = useNavigation();
 
-  }
-  catch (error) {
-
-      Alert.alert(
-          error.name,
-          error.message
-      )
-  }
-}
+  const Submit = async (data) => {
+    try {
+      setLoading(true);
+      const { email, password } = data;
+      await signInWithEmailAndPassword(
+        auth,
+        email.trim().toLowerCase(),
+        password
+      ).then(async (res) => {
+        try {
+          setLoading(true);
+          const jsonValue = JSON.stringify(res.user);
+          await AsyncStorage.setItem("Studens", res.user.uid);
+          navigation.navigate("main");
+          setLoading(false);
+        } catch (e) {
+          // saving error
+          console.log("no data");
+        }
+      });
+    } catch (error) {
+      setLoading(false);
+      Alert.alert(error.name, error.message);
+    }
+  };
   return (
     <Formik
-                  initialValues={{email:'',password:''}}
-                 validationSchema={ReviewSchem}
-                 onSubmit={(values,action)=>{
-                     action.resetForm()
-                     Submit(values)
-                 }}
-                 >
-                     {(props)=>(
-                       
-    <View style={styles.inputsContainer}>
-      <TextInput
-        placeholder="email address"
-        outlineStyle={styles.outline}
-        mode="outlined"
-        label={"email address"}
-        style={styles.input}
-        onChangeText={props.handleChange('email')}
-        value={props.values.email}
-        onBlur={props.handleBlur('email')}
-      />
-      <Text style={{color:'red',marginTop:-15}}>{props.touched.email && props.errors.email}</Text>
-      <TextInput
-        placeholder="password"
-        outlineStyle={styles.outline}
-        mode="outlined"
-        label={"password"}
-        secureTextEntry={true}
-        style={styles.input}
-        onChangeText={props.handleChange('password')}
-        value={props.values.password}
-        onBlur={props.handleBlur('password')}
-      />
-       <Text style={{color:'red',marginTop:-15}}>{props.touched.password && props.errors.password}</Text>
-      <Button
-        mode="contained-tonal"
-        style={styles.button}
-        labelStyle={styles.label}
-        onPress={props.handleSubmit}
-      >
-        sign in
-      </Button>
-     
-    </View>
-    )}
+      initialValues={{ email: "", password: "" }}
+      validationSchema={ReviewSchem}
+      onSubmit={(values, action) => {
+        action.resetForm();
+        Submit(values);
+      }}
+    >
+      {(props) => (
+        <View style={styles.inputsContainer}>
+          <TextInput
+            placeholder="email address"
+            outlineStyle={styles.outline}
+            mode="outlined"
+            label={"email address"}
+            style={styles.input}
+            onChangeText={props.handleChange("email")}
+            value={props.values.email}
+            onBlur={props.handleBlur("email")}
+          />
+          <Text style={{ color: "red", marginTop: -10 }}>
+            {props.touched.email && props.errors.email}
+          </Text>
+          <TextInput
+            placeholder="password"
+            outlineStyle={styles.outline}
+            mode="outlined"
+            label={"password"}
+            secureTextEntry={true}
+            style={styles.input}
+            onChangeText={props.handleChange("password")}
+            value={props.values.password}
+            onBlur={props.handleBlur("password")}
+          />
+          <Text style={{ color: "red", marginTop: -10 }}>
+            {props.touched.password && props.errors.password}
+          </Text>
+          <Button
+            mode="contained-tonal"
+            style={styles.button}
+            labelStyle={styles.label}
+            onPress={props.handleSubmit}
+            loading={loading}
+            disabled={loading ? true : false}
+          >
+            sign in
+          </Button>
+        </View>
+      )}
     </Formik>
   );
 };

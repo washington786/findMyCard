@@ -62,10 +62,10 @@ export const ContentCardItem = (props: item) => {
       key={props.id}
     > 
       <Card.Content>
-        <View style={{ maxHeight: 100, minHeight: 100 }}>
-          <Caption style={{ position: "absolute", right: 2, top: -10 }}>
+        <View style={{ maxHeight: 80, minHeight: 80 }}>
+          {/* <Caption style={{ position: "absolute", right: 2, top: -10 }}>
             posted: 02 Jan 2022 09:20am
-          </Caption>
+          </Caption> */}
 
           <View
             style={[
@@ -84,20 +84,20 @@ export const ContentCardItem = (props: item) => {
               style={styles.avt}
             />
             <Title style={{ fontSize: 14, paddingHorizontal: 8 }}>
-              Student Admin Office<Caption>({props.admin})</Caption>{" "}
+              Created by: <Caption>({props.admin})</Caption>{" "}
             </Title>
           </View>
 
           <View style={styles.info}>
             <Divider />
             {/* details */}
-            <Texts style={styles.txt}>
+            {/* <Texts style={styles.txt}>
               student Initials: {props.student_name}
-            </Texts>
-            <Texts style={styles.txt}>student number: {props.student_no}</Texts>
+            </Texts> */}
+            <Texts style={styles.txt}>Found Card number: {props.student_no}</Texts>
             <View style={styles.mes}>
               <Icons
-                name="message-square"
+                name="mail"
                 size={20}
                 color={"rgba(0,0,0,0.4)"}
               />

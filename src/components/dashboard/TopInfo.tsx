@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   b: {
-    backgroundColor: "red",
-    color: "white",
+    backgroundColor: "blue",
+    color: "blue",
     position: "absolute",
     right: 4,
     zIndex: 1,
   },
   bellCon: {
-    backgroundColor: "white",
+    backgroundColor: "blue",
     borderRadius: 100,
     width: 50,
     height: 50,

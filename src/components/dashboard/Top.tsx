@@ -21,7 +21,7 @@ export default Top
 const styles = StyleSheet.create({
     top:{
         backgroundColor:'blue',
-        height: height*0.3,
+        height: height*0.15,
         borderBottomRightRadius:90
     }
 })

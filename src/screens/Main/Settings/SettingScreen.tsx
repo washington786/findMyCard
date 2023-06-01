@@ -1,11 +1,10 @@
 import {
   Platform,
-  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Page, SafeView } from "../../../components/Mains";
 import { CustomHeader } from "../../../components/CustomHeader";
 import Scroller from "../../../components/Scroller";
@@ -14,8 +13,8 @@ import Icons from "react-native-vector-icons/Feather";
 import { Button, Divider, Text, Title } from "react-native-paper";
 import { Divider as AndroidDivider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { db,auth } from "../../Auth/firebase";
-import { ref,onValue } from "firebase/database";
+import { db, auth } from "../../Auth/firebase";
+import { ref, onValue } from "firebase/database";
 const isAndroid = Platform.OS === "android";
 
 // screens
@@ -31,23 +30,28 @@ const screens = {
 const SettingScreen = () => {
   const user = auth.currentUser?.uid;
   const navigation = useNavigation();
-  const [Surname,setSurname]=useState('')
-  const [Uid,setUid]=useState('')
-  const [StudentNo,setStudentNo]=useState('')
+
+  const [Surname, setSurname] = useState("");
+  const [phoneNo, setPhoneNumber] = useState("");
+  const [Uid, setUid] = useState("");
+  const [StudentNo, setStudentNo] = useState("");
+
   useEffect(() => {
-   const StudentRef= ref(db,'/Studens/' + user)
-   onValue(StudentRef, snap => {
+    const StudentRef = ref(db, "/Studens/" + user);
+    onValue(StudentRef, (snap) => {
+      setSurname(snap.val() && snap.val()?.Surname);
+      setStudentNo(snap.val()?.StudentNo);
+      setPhoneNumber(snap.val()?.idNo);
+      // setEmail(snap.val().email)
+      setUid(snap.val()?.uid);
+    });
+  }, []);
 
-        setSurname(snap.val() && snap.val().Surname);
-        setStudentNo(snap.val().StudentNo)
-        // setEmail(snap.val().email)
-        setUid(snap.val().uid)
-    }) 
-
-}, [])
   const transitMyAccount = (): any => {
-    navigation.navigate(`${screens.setting}`,{
-      StudentNo:StudentNo,Surname:Surname,Uid:Uid
+    navigation.navigate(`${screens.setting}`, {
+      StudentNo: StudentNo,
+      Surname: Surname,
+      Uid: Uid,
     });
   };
   const transitPassword = (): any => {
@@ -118,12 +122,28 @@ const SettingScreen = () => {
 export default SettingScreen;
 
 const LogWrapper = () => {
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  const handleLogout = () => {
+    // await auth.signOut().then(()=>{
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(true);
+      navigation.navigate("login");
+      setLoading(false);
+    }, 3000);
+    // })
+  };
+
   return (
     <>
       <Button
         labelStyle={{ color: "red" }}
         icon="exit-to-app"
-        onPress={() => {}}
+        onPress={handleLogout}
+        loading={loading}
+        disabled={loading ? true : false}
+        // contentStyle={{backgroundColor:'red'}}
       >
         logout
       </Button>

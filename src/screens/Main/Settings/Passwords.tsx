@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Page, SafeView } from "../../../components/Mains";
 import HeaderBack from "../../../globals/HeaderBack";
@@ -9,6 +9,8 @@ const Passwords = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [loading,setLoading] = useState(false);
+
   const onSetPassword = (e: any): void => {
     setPassword(e);
   };
@@ -16,6 +18,15 @@ const Passwords = () => {
   const onSetConfirmPassword = (e: any): void => {
     setConfirmPassword(e);
   };
+
+  const handleChange=()=>{
+    setLoading(true)
+    setTimeout(()=>{
+      setLoading(true);
+      Alert.alert('Password successfully updated');
+      setLoading(false);
+    },3000);
+  }
 
   return (
     <SafeView>
@@ -32,8 +43,8 @@ const Passwords = () => {
             <Button
               mode="contained-tonal"
               style={styles.btn}
-              loading={false}
-              onPress={() => {}}
+              loading={loading}
+              onPress={handleChange}
             >
               update password
             </Button>

@@ -37,7 +37,7 @@ const Dashboard = () => {
             number_of_notifications_on_badge={10}
             onPress={onTransitToNotifications}
           />
-          <InfoScrollbar />
+          {/* <InfoScrollbar /> */}
         </Top>
         <Content />
       </Page>
